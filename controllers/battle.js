@@ -72,7 +72,7 @@ const batlleController = {
             ]);
 
             return res.status(200).json({
-                message: "Battle Counts",
+                message: "Battles",
                 data: battles,
             });
         } catch (err) {
@@ -82,6 +82,9 @@ const batlleController = {
         }
     },
     
+    // getAllBattleTypes: async (req, res, next) => {
+
+    // }
 };
 
 module.exports = batlleController;
