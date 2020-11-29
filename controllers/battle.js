@@ -1,7 +1,6 @@
 const battleModel = require("../models/battle.schema");
 
 const batlleController = {
-
     getAllBattlePlaces: async (req, res, next) => {
         try {
             const battlePlaces = await battleModel.aggregate([
@@ -10,9 +9,15 @@ const batlleController = {
                         location: { $exists: true, $ne: "" },
                     },
                 },
+
                 {
                     $group: {
                         _id: "$location",
+                    },
+                },
+                {
+                    $sort: {
+                        _id: 1,
                     },
                 },
             ]);
@@ -54,10 +59,22 @@ const batlleController = {
                         $or: req.query.king
                             ? [
                                   {
-                                      attacker_king: req.query.king,
+                                      attacker_king: {
+                                          $regex: new RegExp(
+                                              req.query.king,
+                                              "i"
+                                          ),
+                                          //   $option: "i",
+                                      },
                                   },
                                   {
-                                      defender_king: req.query.king,
+                                      defender_king: {
+                                          $regex: new RegExp(
+                                              req.query.king,
+                                              "i"
+                                          ),
+                                          //   $option: "i",
+                                      },
                                   },
                               ]
                             : [{}],
@@ -65,7 +82,10 @@ const batlleController = {
                             ? req.query.location
                             : { $exists: true, $ne: "" },
                         battle_type: req.query.type
-                            ? req.query.type
+                            ? {
+                                  $regex: new RegExp(req.query.type, "i"),
+                                  //   $option: "i",
+                              }
                             : { $exists: true, $ne: "" },
                     },
                 },
@@ -81,7 +101,7 @@ const batlleController = {
             });
         }
     },
-    
+
     // getAllBattleTypes: async (req, res, next) => {
 
     // }
